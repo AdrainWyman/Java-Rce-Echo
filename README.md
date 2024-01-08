@@ -1,17 +1,132 @@
-# Java RCE 回显
+closetag.vim
+============
 
-### 支持的回显测试代码
-- [x] Linux通用回显
-- [x] Windows通用回显
-- [x] Spring回显
-- [x] Tomcat通用回显 (Tested on 6.0.10/6.0.53/7.0.34/7.0.54/7.0.70/7.0.96/7.0.104/8.0.18/8.0.32/8.0.48/8.5.12/8.5.30/8.5.56/9.0.16/9.0.33, failed on 7.0.10/7.0.22)
-- [x] Weblogic (Tested on 10.3.6.0, 12.1.3.0.0)
-- [x] Websphere (Tested on AppServer V8.5(8.5.5.18), AppServer V9.0(9.0.5.5))
-- [x] JBoss(Wildfly) (Testd on 8.0.0.Final, 18.0.0.Final, 21.0.0.Beta1)
-- [x] Resin (Tested on pro-4.0.64, pro-4.0.57, pro-4.0.45, pro-4.0.32, failed on pro-3.1.15)
-- [x] Jetty (Tested on 9.4.30.v20200611, 9.3.28.v20191105, 9.2.29.v20191105, 9.0.7.v20131107, 8.1.21.v20160908, 7.6.21.v20160908,
-failed on 8.0.3.v20160908, 7.2.1.v20101111)
-- [x] 全自动挖掘 request 回显
-- [x] 写文件回显
-<br/><br/>
-如果有好的建议，欢迎提 ```issue```
+### Usage
+
+The current content:
+
+```vim
+<table|
+```
+
+Now you press <kbd>&gt;</kbd>, the content will be:
+
+```vim
+<table>|</table>
+```
+
+And then if you press <kbd>&gt;</kbd> again, the content will be:
+
+```vim
+<table>
+    |
+</table>
+```
+
+The following tags will not be closed:
+
+```html
+<area>, <base>, <br>, <col>, <command>, <embed>, <hr>, <img>, 
+<input>, <keygen>, <link>, <meta>, <param>, <source>, <track>, <wbr>,<menuitem>
+```
+
+### Installation
+
+* Just put the files into ~/.vim/ or &lt;HOMEDIR&gt;\vimfiles\ (for Windows).
+
+* Use vundle:
+
+```vim
+Plugin 'alvan/vim-closetag'
+```
+
+* Use other package manager.
+
+### Commands
+
+Use these commands to toggle/enable/disable this function for the current buffer:
+
+```vim
+:CloseTagToggleBuffer
+:CloseTagEnableBuffer
+:CloseTagDisableBuffer
+```
+
+### Options
+
+Set in your vimrc:
+
+```vim
+" filenames like *.xml, *.html, *.xhtml, ...
+" These are the file extensions where this plugin is enabled.
+"
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml'
+
+" filenames like *.xml, *.xhtml, ...
+" This will make the list of non-closing tags self-closing in the specified files.
+"
+let g:closetag_xhtml_filenames = '*.xhtml,*.jsx'
+
+" filetypes like xml, html, xhtml, ...
+" These are the file types where this plugin is enabled.
+"
+let g:closetag_filetypes = 'html,xhtml,phtml'
+
+" filetypes like xml, xhtml, ...
+" This will make the list of non-closing tags self-closing in the specified files.
+"
+let g:closetag_xhtml_filetypes = 'xhtml,jsx'
+
+" integer value [0|1]
+" This will make the list of non-closing tags case-sensitive (e.g. `<Link>` will be closed while `<link>` won't.)
+"
+let g:closetag_emptyTags_caseSensitive = 1
+
+" dict
+" Disables auto-close if not in a "valid" region (based on filetype)
+"
+let g:closetag_regions = {
+    \ 'typescript.tsx': 'jsxRegion,tsxRegion',
+    \ 'javascript.jsx': 'jsxRegion',
+    \ 'typescriptreact': 'jsxRegion,tsxRegion',
+    \ 'javascriptreact': 'jsxRegion',
+    \ }
+
+" Shortcut for closing tags, default is '>'
+"
+let g:closetag_shortcut = '>'
+
+" Add > at current position without closing the current tag, default is ''
+"
+let g:closetag_close_shortcut = '<leader>>'
+```
+
+### Note about React fragments
+
+By default, React fragments are automatically closed **only** when a React file is open.
+
+When editing a `.html` file you will get:
+
+```
+<|
+<>|
+```
+
+When editing a `.{t,j}sx` file you will get:
+```
+<|
+<>|</>
+```
+
+To override this behavior, you can set the global `g:closetag_enable_react_fragment` in your `.vimrc`:
+
+```vim
+" integer value [0|1]
+" Enables closing tags for React fragments -> <></> for all supported file types
+"
+let g:closetag_enable_react_fragment = 1
+" Disable closing tags for React fragments -> <></> for all supported file types
+"
+let g:closetag_enable_react_fragment = 0
+```
+
